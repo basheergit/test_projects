@@ -1,3 +1,4 @@
+
 import pandas as pd
 
 # Read the CSV file
@@ -37,3 +38,4 @@ df_grouped = df_initial.groupby(group_column)[numeric_columns].mean()
 bottom_5 = df_grouped.nsmallest(5, 'voter_turnout_ratio')
 
 print(bottom_5)
+print("data")
