@@ -4,7 +4,7 @@ import pandas as pd
 df_2019 = pd.read_csv('results_2019.csv')
 
 # Group by 'state', 'pc_name', and 'party', then sum the 'total_votes'
-grouped_2019 = df_2019.groupby(['state', 'pc_name', 'party'])['total_votes'].sum().reset_index()
+grouped_2019 = df_2019.groupby(['state', 'pc_name', 'party', 'voting_percentage'])['total_votes'].sum().reset_index()
 
 # Find the party with the highest votes in each 'pc_name'
 idx_2019 = grouped_2019.groupby('pc_name')['total_votes'].idxmax()
