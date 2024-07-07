@@ -1,5 +1,6 @@
 import os
 import re
+from collections import defaultdict
 
 def extract_queries_from_log(file_path):
     """
@@ -32,7 +33,22 @@ def count_queries_in_logs(log_dir):
             query_counts[filename] = len(queries)
     return query_counts
 
+def group_logs_by_query_count(query_counts):
+    """
+    Groups log files by the number of queries.
+
+    :param query_counts: Dictionary with file names as keys and query counts as values.
+    :return: Dictionary with query counts as keys and lists of file names as values.
+    """
+    grouped_logs = defaultdict(list)
+    for filename, count in query_counts.items():
+        grouped_logs[count].append(filename)
+    return grouped_logs
+
 # Example usage
 log_directory = r'C:\Users\bashe\OneDrive\Desktop\Data Science\Projects\quantana\uat_mysql_logs\mysql'
 query_counts = count_queries_in_logs(log_directory)
-print(query_counts)
+grouped_logs = group_logs_by_query_count(query_counts)
+
+for count, files in grouped_logs.items():
+    print(f"{count} queries: {files}")
