@@ -1,49 +1,28 @@
 import re
-from collections import defaultdict
+from collections import Counter
 
-def parse_log(file_path):
-    with open(file_path, 'r') as file:
-        log_data = file.read()
-    
-    # Regular expression to match query entries
-    query_pattern = re.compile(r'# Time: (.*?)\n# User@Host: (.*?)\n# Query_time: (.*?)\n# Lock_time: (.*?)\n# Rows_sent: (.*?)\n# Rows_examined: (.*?)\n(.*?)SET timestamp=.*?;\n(.*?);', re.DOTALL)
-    
-    queries = query_pattern.findall(log_data)
-    return queries
+# Use raw string to handle backslashes in the file path
+log_file_path = r'C:\Users\bashe\OneDrive\Desktop\Data Science\Projects\quantana\uat_mysql_logs\mysql\error.log.5'
 
-def group_errors_by_type(queries):
-    error_types = defaultdict(list)
-    
-    for query in queries:
-        time, user_host, query_time, lock_time, rows_sent, rows_examined, command, sql_query = query
-        
-        # Example error types based on query content
-        if "SELECT" in sql_query:
-            error_types['SELECT'].append(sql_query)
-        elif "INSERT" in sql_query:
-            error_types['INSERT'].append(sql_query)
-        elif "UPDATE" in sql_query:
-            error_types['UPDATE'].append(sql_query)
-        elif "DELETE" in sql_query:
-            error_types['DELETE'].append(sql_query)
-        else:
-            error_types['OTHER'].append(sql_query)
-    
-    return error_types
+# Regular expression to match error lines
+error_pattern = re.compile(r'ERROR\s+(\d+):')
 
-def main():
-    log_file_path = 'C:\Users\bashe\OneDrive\Desktop\Data Science\Projects\quantana\uat_mysql_logs\mysql'  # Path to your log file
-    queries = parse_log(log_file_path)
-    
-    print(f"Total number of queries: {len(queries)}")
-    
-    error_types = group_errors_by_type(queries)
-    
-    for error_type, queries in error_types.items():
-        print(f"\nError Type: {error_type}")
-        print(f"Number of queries: {len(queries)}")
-        for query in queries:
-            print(query)
+error_counts = Counter()
 
-if __name__ == "__main__":
-    main()
+try:
+    with open(log_file_path, 'r') as log_file:
+        for line in log_file:
+            match = error_pattern.search(line)
+            if match:
+                error_code = match.group(1)
+                error_counts[error_code] += 1
+
+    # Print sorted error counts
+    for error_code, count in error_counts.most_common():
+        print(f'Error Code: {error_code}, Count: {count}')
+except PermissionError:
+    print(f"Permission denied: '{log_file_path}'")
+except FileNotFoundError:
+    print(f"File not found: '{log_file_path}'")
+except Exception as e:
+    print(f"An error occurred: {e}")
