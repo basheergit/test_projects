@@ -27,4 +27,4 @@ input_data = pd.DataFrame([[3000, 3, 4]], columns=['area', 'bedrooms', 'age'])
 
 # Make a prediction
 prediction = reg.predict(input_data)
-print("Prediction for input [3000, 3, 4]:", prediction)
+print("Prediction for input [3600, 3, 12]:", prediction)
