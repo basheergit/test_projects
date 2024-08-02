@@ -11,8 +11,8 @@ api_calls = defaultdict(list)
 api_counts = defaultdict(int)
 line_count = 0
 
-# Read the log file
-with open(r'C:\Users\bashe\OneDrive\Desktop\Data Science\Projects\quantana\Access_logs\pm2outlog.txt', 'r') as log_file:
+# Read the log file with the correct encoding
+with open(r'C:\Users\bashe\OneDrive\Desktop\Data Science\Projects\quantana\Access_logs\pm2outlog_30.txt', 'r', encoding='utf-8') as log_file:
   for line in log_file:
       line_count += 1
       match = log_pattern.search(line)
